@@ -10,7 +10,8 @@ import org.apache.thrift.transport.TTransport;
 import chatservice.ChatService;
 
 public class ChatClient {
-	static boolean exit = false;
+	public static boolean exit = false;
+	public static String nick = "";
 	
 	public static void main(String [] args) {
 		try {
@@ -37,13 +38,14 @@ public class ChatClient {
 		if (cmdString.startsWith("/")){
 			String[] cmd = cmdString.split("\\s+");
 			switch (cmd[0]){
-				case "/NICK":	ret = client.nick(cmd[1]); 
+				case "/NICK":	ret = client.nick(cmd[1]);
+								nick = cmd[1];
 								break;
-				case "/JOIN":	ret = client.join(cmd[1]); 
+				case "/JOIN":	ret = client.join(cmd[1], nick); 
 								break;
-				case "/LEAVE": 	ret = client.leave(cmd[1]); 
+				case "/LEAVE": 	ret = client.leave(cmd[1], nick); 
 								break;
-				case "/EXIT": 	ret = client.exit();
+				case "/EXIT": 	ret = client.exit(nick);
 								exit = true;
 								break;
 				default: 		break;
@@ -53,6 +55,6 @@ public class ChatClient {
 		if (cmdString.startsWith("@")){
 //			client.message(channelname, message);
 		}
-		client.message("", cmdString);
+		client.message("", cmdString, nick);
 	}
 }
