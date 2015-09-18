@@ -1,11 +1,31 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.thrift.TException;
 
 import chatservice.ChatService;
+import chatservice.MessageService;
+import chatservice.Message;
 
-public class ChatHandler implements ChatService.Iface{
+public class ChatHandler implements ChatService.Iface, 
+	MessageService.Iface, Runnable{
+	private final BlockingQueue<Message> messageQueue;
+	private final List<Client> clients;
+	
+	public ChatHandler() {
+	    this.messageQueue = new LinkedBlockingQueue<Message>();
+	    this.clients = new ArrayList<Client>();
+	}
+	  
+	public void addClient(Client client) {
+	    clients.add(client);
+	}
 	
 	@Override
-	public int nick(String nickname) throws TException {
+	public void nick(String nickname) throws TException {
 		System.out.println("/NICK " + nickname);
 		if (nickname.isEmpty()){
 			nickname = "nickname";
@@ -13,13 +33,11 @@ public class ChatHandler implements ChatService.Iface{
 		if (!ChatServer.users.contains(nickname)){
 			ChatServer.users.add(nickname);
 			System.out.println("Users: " + ChatServer.users.toString());
-			return 1;
 		}
-		return 	-1;
 	}
 
 	@Override
-	public int join(String channelname, String nick) throws TException {
+	public void join(String channelname, String nick) throws TException {
 		System.out.println("/JOIN " + channelname);
 		if (channelname.isEmpty()){
 			channelname = "channelname";
@@ -29,41 +47,51 @@ public class ChatHandler implements ChatService.Iface{
 			ChatServer.Channel channel = new ChatServer.Channel(nick);
 			System.out.println("Channels: " + ChatServer.channelNames.toString());
 			ChatServer.channels.add(channel);
-			return 1;
 		}
 		int id = ChatServer.channelNames.indexOf(channelname);
 		ChatServer.channels.get(id).addMember(nick);
-		return 	1;
+		System.out.println("Users: " + ChatServer.channels.get(id).members.toString());
 	}
 
 	@Override
-	public int leave(String channel, String nick) throws TException {
+	public void leave(String channel, String nick) throws TException {
 		System.out.println("/LEAVE " + channel);
-		if (channel.isEmpty()){
-			return 0;
+		if (!channel.isEmpty() && !ChatServer.channelNames.contains(channel)){
+			int id = ChatServer.channelNames.indexOf(channel);
+			ChatServer.channels.get(id).deleteMember(nick);
+			System.out.println("Channel " + ChatServer.channelNames.get(id) + 
+					": " + ChatServer.channels.get(id).members.toString());
 		}
-		if (!ChatServer.channelNames.contains(channel)){
-			return 0;
-		}
-		int id = ChatServer.channelNames.indexOf(channel);
-		ChatServer.channels.get(id).deleteMember(nick);
-		System.out.println("Channel " + ChatServer.channelNames.get(id) + 
-				": " + ChatServer.channels.get(id).members.toString());
-		return 	1;
 	}
 
 	@Override
-	public int exit(String nick) throws TException {
+	public void exit(String nick) throws TException {
 		ChatServer.users.remove(nick);
-		return 0;
+		System.out.println(ChatServer.users.toString());
 	}
 
 	@Override
-	public int message(String channelname, String message, String nick) throws TException {
-		// TODO Auto-generated method stub
-//		System.out.println("Channel " + channelname + " nick " + nick + " message " + message);
-		ChatServer.message = message;
-		return 0;
+	public void send(Message message) throws TException {
+		System.out.println(message.getNick() + ": " + message.getMessage());
+		messageQueue.add(message);
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			try {
+				Message msg = messageQueue.take();
+				Iterator<Client> clientItr = clients.iterator();
+				while (clientItr.hasNext()) {
+					Client client = clientItr.next();
+					client.send(msg);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (TException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
