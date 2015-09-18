@@ -61,6 +61,8 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public int message(String channelname, String message, String nick) throws TException {
 		// TODO Auto-generated method stub
+//		System.out.println("Channel " + channelname + " nick " + nick + " message " + message);
+		ChatServer.message = message;
 		return 0;
 	}
 

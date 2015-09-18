@@ -13,6 +13,7 @@ public class ChatServer {
 	public static ArrayList<String> users;
 	public static ChatHandler handler;
 	public static ChatService.Processor processor;
+	public static String message = null;
 	
 	public static void main(String [] args) {
 		try {

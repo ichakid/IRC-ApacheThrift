@@ -53,8 +53,17 @@ public class ChatClient {
 		}
 		System.out.println(ret);
 		if (cmdString.startsWith("@")){
+			String chName = null;
+			String msg = null;
+			if(cmdString.contains(" ")){
+				int idx = cmdString.indexOf(" ");
+			    chName = cmdString.substring(1, idx);
+			    msg = cmdString.substring(idx+1);
+			}
+			client.message(chName, msg, nick);
 //			client.message(channelname, message);
 		}
-		client.message("", cmdString, nick);
+//		client.message("", cmdString, nick);
+//		client.recv_message();
 	}
 }
