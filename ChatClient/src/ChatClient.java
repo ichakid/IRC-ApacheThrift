@@ -57,7 +57,15 @@ public class ChatClient {
 			};
 			sender.start();
 			receiver.start();
-			transport.close();
+			try {
+				sender.join();
+				receiver.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				transport.close();
+			}
 		} catch (TException x) {
 			x.printStackTrace();
 		}
