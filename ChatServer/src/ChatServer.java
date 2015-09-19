@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TServer;
@@ -6,20 +7,18 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 
 import chatservice.ChatService;
+import chatservice.Message;
 
 public class ChatServer {
-	public static ArrayList<Channel> channels;
-	public static ArrayList<String> channelNames;
-	public static ArrayList<String> users;
+	public static Channels channels;
+	public static Users users;
 	public static ChatHandler handler;
 	public static ChatService.Processor processor;
-	public static String message = null;
 	
 	public static void main(String [] args) {
 		try {
-			channels = new ArrayList();
-			channelNames = new ArrayList();
-			users = new ArrayList();
+			channels = new Channels();
+			users = new Users();
 			handler = new ChatHandler();
 			processor = new ChatService.Processor(handler);
 			TNonblockingServerSocket serverTransport = new TNonblockingServerSocket(9090);
@@ -34,26 +33,58 @@ public class ChatServer {
 		}
 	}
 	
-	public static class Channel {
-		ArrayList<String> members;
+	public static class Channels {
+		private List<Channel> channels;
 		
-		public Channel() {
-			members = new ArrayList();
-		}
-
-		public Channel(String u) {
-			members = new ArrayList();
-			members.add(u);
+		public Channels() {
+			channels = new ArrayList<Channel>();
 		}
 		
-		public void addMember(String u) {
-			if (!members.contains(u)) {
-				members.add(u);
+		public void addChannel(Channel channel) {
+			channels.add(channel);
+		}
+		
+		//Check whether channel with certain name is exist
+		public boolean isExist(String channelName) {
+			return false;
+		}
+		
+		//Get channel instance by channelName
+		public Channel getChannel(String channelName) {
+			return new Channel();
+		}
+		
+		public void removeUser(User user) {
+			for (Channel c : channels) {
+				c.removeMember(user);
 			}
 		}
 		
-		public void deleteMember(String u) {
-			members.remove(u);
+		public void addMessage(Message m) {
+			for (Channel c : channels) {
+				c.addMessage(m);
+			}
+		}
+	}
+	
+	public static class Users {
+		private List<User> users;
+		
+		public Users() {
+			users = new ArrayList<User>();
+		}
+		
+		public void addUser(User user) {
+			users.add(user);
+		}
+		
+		public void removeUser(User user) {
+			users.remove(user);
+		}
+		
+		//Get user instance by clientKey
+		public User getUser(String clientKey) {
+			return new User(clientKey);
 		}
 	}
 }

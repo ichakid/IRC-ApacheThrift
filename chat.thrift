@@ -1,11 +1,18 @@
 namespace java chatservice
 
-typedef i32 int
-service ChatService
-{
-	int nick(1:string nickname),
-	int join(1:string channelname, 2:string nick),
-	int leave(1:string channel, 2:string nick),
-	int exit(1:string nick),
-	int message(1:string channelname, 2:string message, 3:string nick),
+
+struct Message {
+	1:string channel,
+	2:string message,
+	3:string clientKey,
+}
+
+service ChatService {
+	string getKey(),
+	string nick(1:string nickname, 2:string clientKey),
+	string join(1:string channel, 2:string clientKey),
+	string leave(1:string channel, 2:string clientKey),
+	string exit(1:string clientKey),
+	list<Message> get(1:string clientKey),
+	string send(1:Message message),
 }
