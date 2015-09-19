@@ -49,7 +49,7 @@ public class ChatService {
 
     public String exit(String clientKey) throws org.apache.thrift.TException;
 
-    public List<Message> get(String clientKey) throws org.apache.thrift.TException;
+    public Message get(String clientKey) throws org.apache.thrift.TException;
 
     public String send(Message message) throws org.apache.thrift.TException;
 
@@ -210,7 +210,7 @@ public class ChatService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "exit failed: unknown result");
     }
 
-    public List<Message> get(String clientKey) throws org.apache.thrift.TException
+    public Message get(String clientKey) throws org.apache.thrift.TException
     {
       send_get(clientKey);
       return recv_get();
@@ -223,7 +223,7 @@ public class ChatService {
       sendBase("get", args);
     }
 
-    public List<Message> recv_get() throws org.apache.thrift.TException
+    public Message recv_get() throws org.apache.thrift.TException
     {
       get_result result = new get_result();
       receiveBase(result, "get");
@@ -462,7 +462,7 @@ public class ChatService {
         prot.writeMessageEnd();
       }
 
-      public List<Message> getResult() throws org.apache.thrift.TException {
+      public Message getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -945,7 +945,7 @@ public class ChatService {
       }
     }
 
-    public static class get<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, get_args, List<Message>> {
+    public static class get<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, get_args, Message> {
       public get() {
         super("get");
       }
@@ -954,10 +954,10 @@ public class ChatService {
         return new get_args();
       }
 
-      public AsyncMethodCallback<List<Message>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<Message> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<List<Message>>() { 
-          public void onComplete(List<Message> o) {
+        return new AsyncMethodCallback<Message>() { 
+          public void onComplete(Message o) {
             get_result result = new get_result();
             result.success = o;
             try {
@@ -991,7 +991,7 @@ public class ChatService {
         return false;
       }
 
-      public void start(I iface, get_args args, org.apache.thrift.async.AsyncMethodCallback<List<Message>> resultHandler) throws TException {
+      public void start(I iface, get_args args, org.apache.thrift.async.AsyncMethodCallback<Message> resultHandler) throws TException {
         iface.get(args.clientKey,resultHandler);
       }
     }
@@ -5225,7 +5225,7 @@ public class ChatService {
   public static class get_result implements org.apache.thrift.TBase<get_result, get_result._Fields>, java.io.Serializable, Cloneable, Comparable<get_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -5233,7 +5233,7 @@ public class ChatService {
       schemes.put(TupleScheme.class, new get_resultTupleSchemeFactory());
     }
 
-    public List<Message> success; // required
+    public Message success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -5298,8 +5298,7 @@ public class ChatService {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Message.class))));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Message.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
     }
@@ -5308,7 +5307,7 @@ public class ChatService {
     }
 
     public get_result(
-      List<Message> success)
+      Message success)
     {
       this();
       this.success = success;
@@ -5319,11 +5318,7 @@ public class ChatService {
      */
     public get_result(get_result other) {
       if (other.isSetSuccess()) {
-        List<Message> __this__success = new ArrayList<Message>(other.success.size());
-        for (Message other_element : other.success) {
-          __this__success.add(new Message(other_element));
-        }
-        this.success = __this__success;
+        this.success = new Message(other.success);
       }
     }
 
@@ -5336,26 +5331,11 @@ public class ChatService {
       this.success = null;
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<Message> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(Message elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<Message>();
-      }
-      this.success.add(elem);
-    }
-
-    public List<Message> getSuccess() {
+    public Message getSuccess() {
       return this.success;
     }
 
-    public get_result setSuccess(List<Message> success) {
+    public get_result setSuccess(Message success) {
       this.success = success;
       return this;
     }
@@ -5381,7 +5361,7 @@ public class ChatService {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((List<Message>)value);
+          setSuccess((Message)value);
         }
         break;
 
@@ -5499,6 +5479,9 @@ public class ChatService {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -5536,19 +5519,9 @@ public class ChatService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-                {
-                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                  struct.success = new ArrayList<Message>(_list0.size);
-                  Message _elem1;
-                  for (int _i2 = 0; _i2 < _list0.size; ++_i2)
-                  {
-                    _elem1 = new Message();
-                    _elem1.read(iprot);
-                    struct.success.add(_elem1);
-                  }
-                  iprot.readListEnd();
-                }
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new Message();
+                struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -5571,14 +5544,7 @@ public class ChatService {
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Message _iter3 : struct.success)
-            {
-              _iter3.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
+          struct.success.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -5604,13 +5570,7 @@ public class ChatService {
         }
         oprot.writeBitSet(optionals, 1);
         if (struct.isSetSuccess()) {
-          {
-            oprot.writeI32(struct.success.size());
-            for (Message _iter4 : struct.success)
-            {
-              _iter4.write(oprot);
-            }
-          }
+          struct.success.write(oprot);
         }
       }
 
@@ -5619,17 +5579,8 @@ public class ChatService {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          {
-            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<Message>(_list5.size);
-            Message _elem6;
-            for (int _i7 = 0; _i7 < _list5.size; ++_i7)
-            {
-              _elem6 = new Message();
-              _elem6.read(iprot);
-              struct.success.add(_elem6);
-            }
-          }
+          struct.success = new Message();
+          struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
       }

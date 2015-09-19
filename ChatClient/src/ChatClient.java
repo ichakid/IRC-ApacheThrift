@@ -26,22 +26,27 @@ public class ChatClient {
 					ChatService.Client(protocol);
 			clientKey = client.getKey();
 			System.out.println(clientKey);
-//			Thread receiver = new Thread(){
-//				@Override
-//				public void run() {
-//					while (!exit) {
-//						try {
-//							List<Message> messages = client.get(clientKey);
-//							for (Message m : messages){
-//								System.out.println(m.getMessage());
-//							}
-//						} catch (TException e) {
-//							exit = true;
-//							e.printStackTrace();
-//						}
-//					}
-//				}
-//			};
+			Thread receiver = new Thread(){
+				@Override
+				public void run() {
+					while (!exit) {
+						try {
+							Message m = client.get(clientKey);
+							if (!m.equals(new Message())) {
+								System.out.println(m.getMessage());
+								m = new Message();
+							}
+							Thread.sleep(3000);
+						} catch (TException e) {
+							exit = true;
+							e.printStackTrace();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			};
 
 			Thread sender = new Thread(){
 				@Override
@@ -56,12 +61,11 @@ public class ChatClient {
 				}
 			};
 			sender.start();
-//			receiver.start();
+			receiver.start();
 			try {
 				sender.join();
-//				receiver.join();
+				receiver.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				transport.close();
@@ -95,7 +99,7 @@ public class ChatClient {
 					ret = client.leave(cmd[1], clientKey); 
 					break;
 				case "/EXIT": 	
-					client.exit(clientKey);
+					ret = client.exit(clientKey);
 					exit = true;
 					break;
 				default:
@@ -109,9 +113,10 @@ public class ChatClient {
 			    chName = cmdString.substring(1, idx);
 			    msg = cmdString.substring(idx+1);
 			}
-			client.send(new Message(chName, msg, clientKey));
+			ret = client.send(new Message(chName, msg, clientKey));
 		} else {
-			client.send(new Message("", cmdString, clientKey));
+			ret = client.send(new Message("", cmdString, clientKey));
 		}
+		System.out.println(ret);
 	}
 }

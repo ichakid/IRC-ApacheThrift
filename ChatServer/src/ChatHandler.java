@@ -28,7 +28,6 @@ public class ChatHandler implements ChatService.Iface{
 			int temp = ChatServer.users.getListUsers().size();
 			user.setNick("user" + String.valueOf(temp));
 		}
-		System.out.println(user.getNick());
 		return user.getNick();
 	}
 
@@ -76,15 +75,16 @@ public class ChatHandler implements ChatService.Iface{
 	}
 
 	@Override
-	public List<Message> get(String clientKey) throws TException {
+	public Message get(String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
-		return user.getMessages();
+		return user.getMessage();
 	}
 
 	@Override
 	public String send(Message message) throws TException {
+		User user = ChatServer.users.getUser(message.getClientKey());
 		if (message.getChannel().isEmpty()) {	//send to all user's channels
-			ChatServer.channels.addMessage(message);
+			user.addMessageToAllChannels(message);
 		} else {
 			Channel c = ChatServer.channels.getChannel(
 					message.getChannel());

@@ -6,21 +6,20 @@ import chatservice.Message;
 public class User {
 	private String clientKey;
 	private String nick;
-	private List<Message> messages;
-	private List<Channel> channels;
+	private Message message;
+	private ChatServer.Channels channels;
 	
 	public User() {
 		this.clientKey = "";
 		this.nick = "";
-		this.messages = new ArrayList<Message>();
-		this.channels = new ArrayList<Channel>();
+		this.message = new Message();
+		this.channels = new ChatServer.Channels();
 	}
 	
 	public User(String key) {
-		String clientKey = key;
-//		this.nick = "nickname";			//generate random nickname for user
-		this.messages = new ArrayList<Message>();
-		this.channels = new ArrayList<Channel>();
+		this.clientKey = key;
+		this.message = new Message();
+		this.channels = new ChatServer.Channels();
 	}
 	
 	public void setNick(String nick) {
@@ -31,20 +30,26 @@ public class User {
 		return nick;
 	}
 	
-	public List<Message> getMessages() {
-		return messages;
+	public Message getMessage() {
+		Message m = message;
+		message = new Message();
+		return m;
 	}
 	
 	public void addMessage(Message m) {
-		messages.add(m);
+		message = m;
+	}
+	
+	public void addMessageToAllChannels(Message m) {
+		channels.addMessage(m);
 	}
 	
 	public void addChannel(Channel channel) {
-		channels.add(channel);
+		channels.addChannel(channel);
 	}
 	
 	public void removeChannel(Channel channel) {
-		channels.remove(channel);
+		channels.removeChannel(channel);
 	}
 	
 	public String getClientKey() {

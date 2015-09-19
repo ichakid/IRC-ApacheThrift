@@ -6,18 +6,17 @@ import chatservice.Message;
 public class Channel {
 	private String name;
 	private List<User> members;
-	private List<Message> messages;
+	private Message message;
 	
 	public Channel() {
 		name = "";
 		members = new ArrayList<User>();
-		messages = new ArrayList<Message>();
-//		name = "channelname";		//generate random name for channel
+		message = new Message();
 	}
 	
 	public Channel(String name) {
 		members = new ArrayList<User>();
-		messages = new ArrayList<Message>();
+		message = new Message();
 		this.name = name;
 	}
 	
@@ -34,7 +33,7 @@ public class Channel {
 	}
 	
 	public void addMessage(Message m) {
-		this.messages.add(m);
+		this.message = m;
 		for (User u :  members) {
 			u.addMessage(m);
 		}

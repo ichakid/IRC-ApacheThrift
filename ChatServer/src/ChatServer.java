@@ -44,6 +44,10 @@ public class ChatServer {
 			channels.add(channel);
 		}
 		
+		public void removeChannel(Channel channel) {
+			channels.remove(channel);
+		}
+		
 		//Check whether channel with certain name is exist
 		public boolean isExist(String channelName) {
 			boolean ret = false;
