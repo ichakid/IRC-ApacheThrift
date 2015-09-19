@@ -9,9 +9,16 @@ public class User {
 	private List<Message> messages;
 	private List<Channel> channels;
 	
+	public User() {
+		this.clientKey = "";
+		this.nick = "";
+		this.messages = new ArrayList<Message>();
+		this.channels = new ArrayList<Channel>();
+	}
+	
 	public User(String key) {
 		String clientKey = key;
-		this.nick = "nickname";			//generate random nickname for user
+//		this.nick = "nickname";			//generate random nickname for user
 		this.messages = new ArrayList<Message>();
 		this.channels = new ArrayList<Channel>();
 	}
@@ -38,5 +45,9 @@ public class User {
 	
 	public void removeChannel(Channel channel) {
 		channels.remove(channel);
+	}
+	
+	public String getClientKey() {
+		return this.clientKey;
 	}
 }

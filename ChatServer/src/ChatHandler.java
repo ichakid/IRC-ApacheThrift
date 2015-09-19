@@ -1,3 +1,5 @@
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 import org.apache.thrift.TException;
@@ -10,7 +12,8 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public String getKey() throws TException {
 		//generate key for client
-		String key = "xxxxxxx";
+		SecureRandom random = new SecureRandom();
+		String key = new BigInteger(35, random).toString(32);
 		User user = new User(key);
 		ChatServer.users.addUser(user);
 		return key;
@@ -21,7 +24,11 @@ public class ChatHandler implements ChatService.Iface{
 		User user = ChatServer.users.getUser(clientKey);
 		if (!nickname.isEmpty()) {
 			user.setNick(nickname);
+		} else {
+			int temp = ChatServer.users.getListUsers().size();
+			user.setNick("user" + String.valueOf(temp));
 		}
+		System.out.println(user.getNick());
 		return user.getNick();
 	}
 
@@ -30,7 +37,8 @@ public class ChatHandler implements ChatService.Iface{
 		User user = ChatServer.users.getUser(clientKey);
 		Channel c;
 		if (channel.isEmpty()) {
-			c = new Channel();
+			int temp = ChatServer.channels.getListChannels().size();
+			c = new Channel("channel" + String.valueOf(temp));
 			ChatServer.channels.addChannel(c);
 		} else if (!ChatServer.channels.isExist(channel)) {
 				c = new Channel(channel);
@@ -75,7 +83,7 @@ public class ChatHandler implements ChatService.Iface{
 
 	@Override
 	public String send(Message message) throws TException {
-		if (message.getChannel().isEmpty()) {	//send to all channels
+		if (message.getChannel().isEmpty()) {	//send to all user's channels
 			ChatServer.channels.addMessage(message);
 		} else {
 			Channel c = ChatServer.channels.getChannel(

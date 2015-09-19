@@ -22,26 +22,26 @@ public class ChatClient {
 			transport.open();
 			TProtocol protocol = new TBinaryProtocol(
 					new TFramedTransport(transport));
-			ChatService.Client client = new
+			final ChatService.Client client = new
 					ChatService.Client(protocol);
 			clientKey = client.getKey();
 			System.out.println(clientKey);
-			Thread receiver = new Thread(){
-				@Override
-				public void run() {
-					while (!exit) {
-						try {
-							List<Message> messages = client.get(clientKey);
-							for (Message m : messages){
-								System.out.println(m.getMessage());
-							}
-						} catch (TException e) {
-							exit = true;
-							e.printStackTrace();
-						}
-					}
-				}
-			};
+//			Thread receiver = new Thread(){
+//				@Override
+//				public void run() {
+//					while (!exit) {
+//						try {
+//							List<Message> messages = client.get(clientKey);
+//							for (Message m : messages){
+//								System.out.println(m.getMessage());
+//							}
+//						} catch (TException e) {
+//							exit = true;
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//			};
 
 			Thread sender = new Thread(){
 				@Override
@@ -56,10 +56,10 @@ public class ChatClient {
 				}
 			};
 			sender.start();
-			receiver.start();
+//			receiver.start();
 			try {
 				sender.join();
-				receiver.join();
+//				receiver.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -80,10 +80,16 @@ public class ChatClient {
 			String[] cmd = cmdString.split("\\s+");
 			switch (cmd[0]){
 				case "/NICK":	
-					ret = client.nick(cmd[1], clientKey);
+					if (cmd.length > 1)
+						ret = client.nick(cmd[1], clientKey);
+					else
+						ret = client.nick("", clientKey);
 					break;
 				case "/JOIN":	
-					ret = client.join(cmd[1], clientKey); 
+					if (cmd.length > 1)
+						ret = client.join(cmd[1], clientKey); 
+					else
+						ret = client.join("", clientKey);
 					break;
 				case "/LEAVE": 	
 					ret = client.leave(cmd[1], clientKey); 

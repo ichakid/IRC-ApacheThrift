@@ -9,9 +9,10 @@ public class Channel {
 	private List<Message> messages;
 	
 	public Channel() {
+		name = "";
 		members = new ArrayList<User>();
 		messages = new ArrayList<Message>();
-		name = "channelname";		//generate random name for channel
+//		name = "channelname";		//generate random name for channel
 	}
 	
 	public Channel(String name) {

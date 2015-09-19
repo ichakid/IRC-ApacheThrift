@@ -46,12 +46,29 @@ public class ChatServer {
 		
 		//Check whether channel with certain name is exist
 		public boolean isExist(String channelName) {
-			return false;
+			boolean ret = false;
+			int i = 0;
+			while (!ret && i < channels.size()) {
+				if (channels.get(i).getName().equals(channelName))
+					ret = true;
+				i++;
+			}
+			return ret;
 		}
 		
 		//Get channel instance by channelName
 		public Channel getChannel(String channelName) {
-			return new Channel();
+			Channel chInstance = new Channel();
+			boolean ret = false;
+			int i = 0;
+			while (!ret && i < channels.size()) {
+				if (channels.get(i).getName().equals(channelName)) {
+					ret = true;
+					chInstance = channels.get(i);
+				}
+				i++;
+			}
+			return chInstance;
 		}
 		
 		public void removeUser(User user) {
@@ -64,6 +81,10 @@ public class ChatServer {
 			for (Channel c : channels) {
 				c.addMessage(m);
 			}
+		}
+		
+		public List<Channel> getListChannels() {
+			return this.channels;
 		}
 	}
 	
@@ -84,7 +105,21 @@ public class ChatServer {
 		
 		//Get user instance by clientKey
 		public User getUser(String clientKey) {
-			return new User(clientKey);
+			User usr = new User();
+			boolean ret = false;
+			int i = 0;
+			while (!ret && i < users.size()) {
+				if (users.get(i).getClientKey().equals(clientKey)) {
+					ret = true;
+					usr = users.get(i);
+				}
+				i++;
+			}
+			return usr;
+		}
+		
+		public List<User> getListUsers() {
+			return this.users;
 		}
 	}
 }
