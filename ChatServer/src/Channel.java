@@ -35,6 +35,7 @@ public class Channel {
 	public void addMessage(Message m) {
 		this.message = m;
 		for (User u :  members) {
+			System.out.println(this.name + " " + m.getChannel() + " " + u.getNick());
 			u.addMessage(m);
 		}
 	}

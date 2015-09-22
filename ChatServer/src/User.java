@@ -41,7 +41,13 @@ public class User {
 	}
 	
 	public void addMessageToAllChannels(Message m) {
-		channels.addMessage(m);
+		List<Channel> chList = channels.getListChannels();
+		for (Channel c : chList) {
+			m.setChannel(c.getName());
+			System.out.println(m.getChannel());
+			c.addMessage(m);
+		}
+//		channels.addMessage(m);
 	}
 	
 	public void addChannel(Channel channel) {
@@ -54,5 +60,9 @@ public class User {
 	
 	public String getClientKey() {
 		return this.clientKey;
+	}
+	
+	public ChatServer.Channels getChannels() {
+		return this.channels;
 	}
 }

@@ -25,7 +25,7 @@ public class ChatClient {
 			final ChatService.Client client = new
 					ChatService.Client(protocol);
 			clientKey = client.getKey();
-			System.out.println(clientKey);
+			System.out.println("Starting client ...");
 			Thread receiver = new Thread(){
 				@Override
 				public void run() {
@@ -33,7 +33,7 @@ public class ChatClient {
 						try {
 							Message m = client.get(clientKey);
 							if (!m.equals(new Message())) {
-								System.out.println(m.getMessage());
+								System.out.println("[" + m.getChannel() + "] (" + m.getClientKey() + ") " + m.getMessage());
 								m = new Message();
 							}
 							Thread.sleep(3000);
@@ -88,18 +88,22 @@ public class ChatClient {
 						ret = client.nick(cmd[1], clientKey);
 					else
 						ret = client.nick("", clientKey);
+					System.out.println("Online as " + ret);
 					break;
 				case "/JOIN":	
 					if (cmd.length > 1)
 						ret = client.join(cmd[1], clientKey); 
 					else
 						ret = client.join("", clientKey);
+					System.out.println("Join channel " + ret);
 					break;
 				case "/LEAVE": 	
-					ret = client.leave(cmd[1], clientKey); 
+					ret = client.leave(cmd[1], clientKey);
+					System.out.println("Leaving channel " + ret);
 					break;
 				case "/EXIT": 	
 					ret = client.exit(clientKey);
+					System.out.println("Going offline...");
 					exit = true;
 					break;
 				default:
@@ -117,6 +121,6 @@ public class ChatClient {
 		} else {
 			ret = client.send(new Message("", cmdString, clientKey));
 		}
-		System.out.println(ret);
+//		System.out.println(ret);
 	}
 }
