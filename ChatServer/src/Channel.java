@@ -6,17 +6,14 @@ import chatservice.Message;
 public class Channel {
 	private String name;
 	private List<User> members;
-	private Message message;
 	
 	public Channel() {
 		name = "";
 		members = new ArrayList<User>();
-		message = new Message();
 	}
 	
 	public Channel(String name) {
 		members = new ArrayList<User>();
-		message = new Message();
 		this.name = name;
 	}
 	
@@ -33,9 +30,7 @@ public class Channel {
 	}
 	
 	public void addMessage(Message m) {
-		this.message = m;
 		for (User u :  members) {
-			System.out.println(this.name + " " + m.getChannel() + " " + u.getNick());
 			u.addMessage(m);
 		}
 	}

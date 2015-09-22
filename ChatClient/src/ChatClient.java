@@ -31,10 +31,11 @@ public class ChatClient {
 				public void run() {
 					while (!exit) {
 						try {
-							Message m = client.get(clientKey);
-							if (!m.equals(new Message())) {
-								System.out.println("[" + m.getChannel() + "] (" + m.getClientKey() + ") " + m.getMessage());
-								m = new Message();
+							List<Message> mlist = client.get(clientKey);
+							if (!mlist.isEmpty()) {
+								for (Message m : mlist){
+									System.out.println("[" + m.getChannel() + "] (" + m.getClientKey() + ") " + m.getMessage());
+								}
 							}
 							Thread.sleep(3000);
 						} catch (TException e) {
@@ -99,7 +100,7 @@ public class ChatClient {
 					break;
 				case "/LEAVE": 	
 					ret = client.leave(cmd[1], clientKey);
-					System.out.println("Leaving channel " + ret);
+					System.out.println(ret);
 					break;
 				case "/EXIT": 	
 					ret = client.exit(clientKey);
@@ -121,6 +122,5 @@ public class ChatClient {
 		} else {
 			ret = client.send(new Message("", cmdString, clientKey));
 		}
-//		System.out.println(ret);
 	}
 }

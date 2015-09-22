@@ -6,19 +6,19 @@ import chatservice.Message;
 public class User {
 	private String clientKey;
 	private String nick;
-	private Message message;
+	private List<Message> message;
 	private ChatServer.Channels channels;
 	
 	public User() {
 		this.clientKey = "";
 		this.nick = "";
-		this.message = new Message();
+		this.message = new ArrayList<Message>();
 		this.channels = new ChatServer.Channels();
 	}
 	
 	public User(String key) {
 		this.clientKey = key;
-		this.message = new Message();
+		this.message = new ArrayList<Message>();
 		this.channels = new ChatServer.Channels();
 	}
 	
@@ -30,14 +30,15 @@ public class User {
 		return nick;
 	}
 	
-	public Message getMessage() {
-		Message m = message;
-		message = new Message();
+	public List<Message> getMessage() {
+		List<Message> m = new ArrayList<Message>();
+		m.addAll(this.message);
+		this.message.clear();
 		return m;
 	}
 	
 	public void addMessage(Message m) {
-		message = m;
+		message.add(m);
 	}
 	
 	public void addMessageToAllChannels(Message m) {
@@ -47,7 +48,10 @@ public class User {
 			System.out.println(m.getChannel());
 			c.addMessage(m);
 		}
-//		channels.addMessage(m);
+	}
+	
+	public boolean isJoinChannel(String channelName) {
+		return this.channels.isExist(channelName);
 	}
 	
 	public void addChannel(Channel channel) {

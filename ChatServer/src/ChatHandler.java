@@ -61,9 +61,12 @@ public class ChatHandler implements ChatService.Iface{
 		}
 		
 		c = ChatServer.channels.getChannel(channel);
+		if (!user.isJoinChannel(c.getName())){
+			return "You're not registered as member of " + c.getName();
+		}
 		c.removeMember(user);
 		user.removeChannel(c);
-		return c.getName();
+		return ("leaving channel " + c.getName());
 	}
 
 	@Override
@@ -75,12 +78,9 @@ public class ChatHandler implements ChatService.Iface{
 	}
 
 	@Override
-	public Message get(String clientKey) throws TException {
+	public List<Message> get(String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
-		Message m = user.getMessage();
-		if (!m.equals(new Message())){
-			System.out.println(user.getNick() + " " + m.getChannel());
-		}
+		List<Message> m = user.getMessage();
 		return m;
 	}
 

@@ -21,7 +21,7 @@ public class ChatServer {
 			users = new Users();
 			handler = new ChatHandler();
 			processor = new ChatService.Processor(handler);
-			TNonblockingServerSocket serverTransport = new TNonblockingServerSocket(9090);
+			TNonblockingServerSocket serverTransport = new TNonblockingServerSocket(8000);
 			THsHaServer.Args arg = new THsHaServer.Args(serverTransport);
 			arg.processor(processor);
 			arg.transportFactory(new TFramedTransport.Factory());
