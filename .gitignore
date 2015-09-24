@@ -13,5 +13,7 @@ hs_err_pid*
 
 # build
 ChatClient/bin/
+ChatClient/.classpath
 ChatServer/bin/
+ChatServer/.classpath
 
