@@ -18,7 +18,7 @@ public class ChatClient {
 	public static void main(String [] args) {
 		try {
 			TTransport transport;
-			transport = new TSocket("localhost", 9090);
+			transport = new TSocket("localhost", 8000);
 			transport.open();
 			TProtocol protocol = new TBinaryProtocol(
 					new TFramedTransport(transport));
@@ -42,7 +42,6 @@ public class ChatClient {
 							exit = true;
 							e.printStackTrace();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}

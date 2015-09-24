@@ -31,7 +31,8 @@ public class Channel {
 	
 	public void addMessage(Message m) {
 		for (User u :  members) {
-			u.addMessage(m);
+			Message msg = m.deepCopy();
+			u.addMessage(msg);
 		}
 	}
 }

@@ -11,8 +11,7 @@ public class ChatHandler implements ChatService.Iface{
 
 	@Override
 	public String getKey() throws TException {
-		//generate key for client
-		SecureRandom random = new SecureRandom();
+		SecureRandom random = new SecureRandom(); //generate key for client
 		String key = new BigInteger(35, random).toString(32);
 		User user = new User(key);
 		
@@ -25,6 +24,7 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public String nick(String nickname, String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
+		System.out.println(user.getNick() + ": /NICK " + nickname);
 		if (!nickname.isEmpty()) {
 			user.setNick(nickname);
 		}
@@ -34,6 +34,7 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public String join(String channel, String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
+		System.out.println(user.getNick() + ": /JOIN " + channel);
 		Channel c;
 		if (channel.isEmpty()) {
 			int temp = ChatServer.channels.getListChannels().size();
@@ -53,6 +54,7 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public String leave(String channel, String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
+		System.out.println(user.getNick() + ": /LEAVE " + channel);
 		Channel c;
 		if (channel.isEmpty()) {
 			return "channel name is empty";
@@ -72,6 +74,7 @@ public class ChatHandler implements ChatService.Iface{
 	@Override
 	public String exit(String clientKey) throws TException {
 		User user = ChatServer.users.getUser(clientKey);
+		System.out.println(user.getNick() + ": /EXIT");
 		ChatServer.channels.removeUser(user);
 		ChatServer.users.removeUser(user);
 		return "exit";

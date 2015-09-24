@@ -45,7 +45,6 @@ public class User {
 		List<Channel> chList = channels.getListChannels();
 		for (Channel c : chList) {
 			m.setChannel(c.getName());
-			System.out.println(m.getChannel());
 			c.addMessage(m);
 		}
 	}
